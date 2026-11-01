@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useNavigation } from 'react-router';
 
 import { type GetProp, type MenuProps, Spin } from 'antd';
 
-import { AuditOutlined, BuildOutlined, HomeOutlined } from '@ant-design/icons';
+import { AuditOutlined, BuildOutlined, HomeOutlined, TeamOutlined } from '@ant-design/icons';
 import { Layout } from '@domain/@shared/Layout';
 
 type Item = NonNullable<MenuProps['items']>[number];
@@ -40,7 +40,7 @@ export function MainLayout() {
 
     const peopleItem: Item = {
         key: '/people',
-        icon: <AuditOutlined />,
+        icon: <TeamOutlined />,
         label: 'Pessoas',
         onClick: () => navigate('/people'),
     };

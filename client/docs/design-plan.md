@@ -1,13 +1,9 @@
 ## Entendimento do problema
 
 A empresa possui um sistema para gerenciar empresas e relatos, mas ainda não é possível identificar qual o envolvimento de cada pessoa nas situações relatadas.
-
 Atuamos como o membro de comitê, que recebe, registra e investiga os relatos de uma empresa.
-
 Precisamos vincular as pessoas aos relatos com um tipo de envolvimento definido: relatante, testemunha, vítima ou denunciado.
-
 O sistema não conta com o cadastro de pessoas na interface, então precisamos primeiro permitir cadastrar e consultar essas pessoas para conseguir fazer o vínculo aos relatos.
-
 As pessoas pertencem ao sistema, sem vínculo com uma empresa específica. Uma pessoa pode participar de vários relatos com papéis diferentes, mas não aparecer mais de uma vez em um mesmo relato.
 
 ## O que será desenvolvido
@@ -30,11 +26,8 @@ As pessoas pertencem ao sistema, sem vínculo com uma empresa específica. Uma p
 ## Decisões e pontos de atenção
 
 Vamos seguir a organização do código e os componentes já usados nas telas de empresas e relatos.
-
 O cadastro de pessoas será feito em uma tela própria. Nos detalhes do relato, vamos selecionar uma pessoa já cadastrada e definir seu envolvimento.
-
 Precisamos tratar os estados de carregamento, listas vazias e falhas nas operações. Quando houver CPF duplicado ou uma pessoa já estiver vinculada ao relato, a interface deverá informar o motivo da falha.
-
 A API já está pronta e define os contratos disponíveis. Precisamos conferir esses contratos antes da implementação para evitar diferenças entre os dados enviados pela interface e os dados esperados pelo servidor.
 
 ## Fluxo de trabalho
@@ -54,5 +47,4 @@ A API já está pronta e define os contratos disponíveis. Precisamos conferir e
 ## Quando considerar concluído
 
 O membro de comitê deverá conseguir cadastrar e consultar pessoas, vincular essas pessoas aos relatos e consultar o papel de cada uma.
-
 Também deverá conseguir identificar se o relato é anônimo, e receber uma mensagem clara quando uma operação não puder ser concluída.
