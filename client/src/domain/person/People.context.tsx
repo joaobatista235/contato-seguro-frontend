@@ -33,6 +33,7 @@ type Value = {
 
 type Props = { children: (value: Value) => ReactNode };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const PeopleContext = createContext<Value | null>(null);
 
 export function PeopleContextProvider({ children }: Props) {
@@ -89,6 +90,7 @@ export function PeopleContextProvider({ children }: Props) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePeopleContext() {
     const context = useContext(PeopleContext);
 

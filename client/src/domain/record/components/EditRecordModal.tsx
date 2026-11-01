@@ -5,6 +5,8 @@ import { App, Divider, Form, Modal } from 'antd';
 import { handleServiceError, hasServiceError } from '@domain/@shared/service.helper';
 import { sleep } from '@domain/@shared/sleep';
 import { useCompaniesContext } from '@domain/company/Companies.context';
+import { RecordInvolvements } from '@domain/involvement/components/RecordInvolvements';
+import { useInvolvementsContext } from '@domain/involvement/Involvements.context';
 
 import { updateRecord } from '../api/update-record.service';
 import { useRecordsContext } from '../Records.context';
@@ -21,23 +23,29 @@ export function EditRecordModal() {
     } = useRecordsContext();
 
     const { companies } = useCompaniesContext();
-
-    if (!record)
-        throw new Error('Value of the `record` property is unknown');
+    const { isSending: isSendingInvolvement } = useInvolvementsContext();
 
     const app = App.useApp();
 
     const [form] = Form.useForm<Values>();
 
+    if (!record) return null;
+
+    const currentRecordId = record.id;
+
     const close = () => {
+        if (isSending || isSendingInvolvement) return;
+
         setIsEditModalVisible(false);
         setRecordId(null);
     };
 
     const onFinish = async (values: Values) => {
+        if (isSending || isSendingInvolvement) return;
+
         setIsSending(true);
 
-        const response = await updateRecord(record.id, values);
+        const response = await updateRecord(currentRecordId, values);
 
         await sleep(1000);
 
@@ -46,7 +54,8 @@ export function EditRecordModal() {
         if (hasServiceError(response))
             return handleServiceError(app, response);
 
-        close();
+        setIsEditModalVisible(false);
+        setRecordId(null);
         fetchRecords();
     };
 
@@ -54,11 +63,17 @@ export function EditRecordModal() {
         <Modal
             open
             title="Editar relato"
+            width={720}
             confirmLoading={isSending}
             onOk={form.submit}
-            okText="Confirmar"
+            okText="Salvar relato"
+            okButtonProps={{ disabled: isSendingInvolvement }}
             onCancel={close}
-            cancelText="Cancelar"
+            cancelText="Fechar"
+            cancelButtonProps={{ disabled: isSending || isSendingInvolvement }}
+            closable={!isSending && !isSendingInvolvement}
+            keyboard={!isSending && !isSendingInvolvement}
+            maskClosable={!isSending && !isSendingInvolvement}
         >
             <Divider />
 
@@ -69,9 +84,14 @@ export function EditRecordModal() {
                 layout="vertical"
                 autoComplete="off"
                 initialValues={record}
+                disabled={isSending || isSendingInvolvement}
             >
                 <RecordFields companies={companies} />
             </Form>
+
+            <Divider />
+
+            <RecordInvolvements disabled={isSending} />
         </Modal>
     );
 }

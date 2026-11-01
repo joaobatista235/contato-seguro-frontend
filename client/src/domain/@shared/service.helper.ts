@@ -4,6 +4,10 @@ import type { Service } from '@domain/@shared/service.type';
 
 export type MakeMessage = (response: Service.ServerException) => string | null;
 
+type AppNotification = {
+    notification: Pick<useAppProps['notification'], 'error'>;
+};
+
 export function hasServiceError(response: Service.DefaultResponse | Service.ExceptionResponse): response is Service.ExceptionResponse {
     if (response instanceof Error)
         return true;
@@ -15,7 +19,7 @@ export function hasServiceError(response: Service.DefaultResponse | Service.Exce
 }
 
 /** @warning Depends on React and Antd! */
-export function handleServiceError({ notification }: useAppProps, response: Service.ExceptionResponse, makeMessage?: MakeMessage): void {
+export function handleServiceError({ notification }: AppNotification, response: Service.ExceptionResponse, makeMessage?: MakeMessage): void {
     console.log('%cA service error has been detected!', 'background-color: #871f1f; color: white');
 
     if (response instanceof Error)
