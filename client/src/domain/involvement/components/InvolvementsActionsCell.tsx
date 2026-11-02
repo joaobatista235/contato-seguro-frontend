@@ -17,8 +17,10 @@ export function InvolvementsActionsCell({ involvement, disabled }: Props) {
     const { recordId, isSending, setIsSending, fetchInvolvements } = useInvolvementsContext();
     const app = App.useApp();
 
+    const isDisabled = disabled || isSending;
+
     const handleDelete = async () => {
-        if (disabled || isSending) return;
+        if (isDisabled) return;
 
         setIsRemoving(true);
         setIsSending(true);
@@ -46,7 +48,7 @@ export function InvolvementsActionsCell({ involvement, disabled }: Props) {
             cancelText="Não"
             okText="Sim"
             okType="danger"
-            okButtonProps={{ loading: isRemoving, disabled: disabled || (isSending && !isRemoving) }}
+            okButtonProps={{ loading: isRemoving, disabled: isDisabled }}
             cancelButtonProps={{ disabled: isRemoving }}
             onConfirm={handleDelete}
             onCancel={() => { if (!isRemoving) setIsPopconfirmVisible(false); }}
@@ -56,7 +58,7 @@ export function InvolvementsActionsCell({ involvement, disabled }: Props) {
                 icon={<DeleteOutlined />}
                 title="Remover envolvido"
                 aria-label={`Remover ${involvement.person?.name ?? 'pessoa indisponível'} do relato`}
-                disabled={disabled || isSending}
+                disabled={isDisabled}
                 onClick={() => setIsPopconfirmVisible(true)}
             />
         </Popconfirm>

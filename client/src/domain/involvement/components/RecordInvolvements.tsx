@@ -46,6 +46,7 @@ export function RecordInvolvements({ disabled }: Props) {
     ];
 
     const isFormDisabled = disabled || isLoading || hasLoadError || isPeopleLoading || hasPeopleError || people.length === 0;
+    const isDisabled = disabled || isSending;
 
     return (
         <section aria-label="Envolvidos no relato">
@@ -69,7 +70,7 @@ export function RecordInvolvements({ disabled }: Props) {
                         type="error"
                         showIcon
                         message="Não foi possível carregar os envolvidos e o anonimato do relato."
-                        action={<Button onClick={fetchInvolvements} disabled={disabled || isSending}>Tentar novamente</Button>}
+                        action={<Button onClick={fetchInvolvements} disabled={isDisabled}>Tentar novamente</Button>}
                     />
                 ) : (
                     <Table
@@ -86,7 +87,7 @@ export function RecordInvolvements({ disabled }: Props) {
                         type="error"
                         showIcon
                         message="Não foi possível carregar as pessoas cadastradas."
-                        action={<Button onClick={fetchPeople} disabled={disabled || isSending}>Tentar novamente</Button>}
+                        action={<Button onClick={fetchPeople} disabled={isDisabled}>Tentar novamente</Button>}
                     />
                 ) : !isPeopleLoading && people.length === 0 ? (
                     <Alert type="info" showIcon message="Cadastre uma pessoa na tela de Pessoas para adicionar envolvidos." />

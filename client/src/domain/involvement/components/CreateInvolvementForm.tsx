@@ -16,27 +16,28 @@ export function CreateInvolvementForm({ disabled }: Props) {
     const [form] = Form.useForm<Values>();
     const app = App.useApp();
 
+    const isDisabled = disabled || isSending;
+
     const onFinish = async (values: Values) => {
-        if (disabled || isSending) return;
+        if (isDisabled) return;
 
         setIsSending(true);
         setIsCreating(true);
+
+        const errorMsg: Partial<Record<number, string>> = {
+            409: 'Esta pessoa já está envolvida neste relato.',
+            404: 'A pessoa ou o relato não está mais disponível. Atualize os dados e tente novamente.',
+            500: 'Não foi possível adicionar esta pessoa ao relato. Tente novamente mais tarde.',
+        };
 
         try {
             const response = await createInvolvement(recordId, values);
 
             if (hasServiceError(response)) {
                 handleServiceError(app, response, error => {
-                    if (error.statusCode === 409)
-                        return 'Esta pessoa já está envolvida neste relato.';
+                    const errorCode = error.statusCode >= 500 ? 500 : error.statusCode;
 
-                    if (error.statusCode === 404)
-                        return 'A pessoa ou o relato não está mais disponível. Atualize os dados e tente novamente.';
-
-                    if (error.statusCode >= 500)
-                        return 'Não foi possível adicionar esta pessoa ao relato. Tente novamente mais tarde.';
-
-                    return null;
+                    return errorMsg[errorCode] ?? null;
                 });
 
                 if (!(response instanceof Error) && response.statusCode === 409) {
@@ -62,11 +63,11 @@ export function CreateInvolvementForm({ disabled }: Props) {
             layout="vertical"
             autoComplete="off"
             onFinish={onFinish}
-            disabled={disabled || isSending}
+            disabled={isDisabled}
         >
             <InvolvementFields />
 
-            <Button type="primary" htmlType="submit" loading={isCreating} disabled={disabled || isSending}>
+            <Button type="primary" htmlType="submit" loading={isCreating} disabled={isDisabled}>
                 Adicionar envolvido
             </Button>
         </Form>
