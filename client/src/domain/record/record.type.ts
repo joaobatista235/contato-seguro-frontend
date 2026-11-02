@@ -1,4 +1,10 @@
+import type { Involvement } from '@domain/involvement/involvement.type';
+
 export namespace Record {
+    export type ListItem = Model & {
+        involvementSummary: Involvement.Summary | null;
+    };
+
     export type Status =
         | 'awaiting_investigation'
         | 'investigation_in_progress'

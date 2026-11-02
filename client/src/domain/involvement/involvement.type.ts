@@ -1,6 +1,11 @@
 import type { Person } from '@domain/person/person.type';
 
 export namespace Involvement {
+    export type Summary = {
+        involvements: Model[];
+        is_anonymous: boolean;
+    };
+
     export type Type = 'whistleblower' | 'witness' | 'victim' | 'denounced';
 
     export type Model = {

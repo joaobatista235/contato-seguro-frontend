@@ -3,12 +3,7 @@ import type { Service } from '@domain/@shared/service.type';
 
 import type { Involvement } from '../involvement.type';
 
-type Data = {
-    involvements: Involvement.Model[];
-    is_anonymous: boolean;
-};
-
-type Response = Service.DefaultResponse<Data> | Service.ExceptionResponse;
+type Response = Service.DefaultResponse<Involvement.Summary> | Service.ExceptionResponse;
 
 /**
  * @service

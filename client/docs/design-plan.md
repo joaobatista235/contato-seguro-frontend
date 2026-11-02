@@ -48,3 +48,13 @@ A API já está pronta e define os contratos disponíveis. Precisamos conferir e
 
 O membro de comitê deverá conseguir cadastrar e consultar pessoas, vincular essas pessoas aos relatos e consultar o papel de cada uma.
 Também deverá conseguir identificar se o relato é anônimo, e receber uma mensagem clara quando uma operação não puder ser concluída.
+
+## Melhoria na consulta de relatos — 02/11/2026
+
+A listagem de relatos também passa a mostrar os envolvidos, separados nas colunas Relatantes, Testemunhas, Vítimas e Denunciados. Uma coluna de identificação mostra se o relato é anônimo ou identificado, conforme a resposta da API.
+
+Como a rota de relatos não retorna os envolvidos, vamos buscar os relatos e consultar os envolvidos de cada um em paralelo, dentro do próprio `fetchRecords`. Cada consulta retorna todos os papéis daquele relato.
+
+O custo é fazer uma consulta de envolvidos para cada relato carregado. Uma consulta que falhar será exibida como “Indisponível”, sem assumir que o relato é anônimo.
+
+Foi identificado o padrão N+1 nas requisições: uma chamada para listar os relatos e uma chamada de envolvidos para cada relato. Como melhoria futura, proponho que `GET /records` já retorne os envolvidos e o anonimato de cada relato, com os relacionamentos carregados em lote no back-end. Isso permitiria montar a listagem com uma única resposta para esses dados.

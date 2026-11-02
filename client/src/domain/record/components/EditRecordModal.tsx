@@ -38,6 +38,7 @@ export function EditRecordModal() {
 
         setIsEditModalVisible(false);
         setRecordId(null);
+        fetchRecords();
     };
 
     const onFinish = async (values: Values) => {

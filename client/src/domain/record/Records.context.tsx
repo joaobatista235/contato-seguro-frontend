@@ -14,12 +14,13 @@ import { App } from 'antd';
 
 import { handleServiceError, hasServiceError } from '@domain/@shared/service.helper';
 import { UnknownContextError } from '@domain/@shared/unknown-context-error';
+import { listInvolvements } from '@domain/involvement/api/list-involvements.service';
 
 import { listRecords } from './api/list-records.service';
 import type { Record } from './record.type';
 
 type Value = {
-    records: Record.Model[];
+    records: Record.ListItem[];
     record: Record.Model | null;
     recordId: Record.Model['id'] | null;
     setRecordId: Dispatch<SetStateAction<Value['recordId']>>;
@@ -51,12 +52,22 @@ export function RecordsContextProvider({ children }: Props) {
 
         const response = await listRecords();
 
-        setIsLoading(false);
-
-        if (hasServiceError(response))
+        if (hasServiceError(response)) {
+            setIsLoading(false);
             return handleServiceError(app, response);
+        }
 
-        setRecords(response.data.records);
+        const recordsWithInvolvements = await Promise.all(response.data.records.map(async record => {
+            const involvements = await listInvolvements(record.id);
+
+            return {
+                ...record,
+                involvementSummary: hasServiceError(involvements) ? null : involvements.data,
+            };
+        }));
+
+        setRecords(recordsWithInvolvements);
+        setIsLoading(false);
     }, [app]);
 
     useEffect(() => {
